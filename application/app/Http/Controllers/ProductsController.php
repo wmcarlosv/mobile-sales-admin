@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Product;
 
 class ProductsController extends Controller
 {
+    private $folder = 'admin.products.';
+    private $base_route = 'products.index';
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +17,9 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        //
+        $title = "Productos";
+        $data = Product::all();
+        return view($this->folder.'index',['title' => $title, 'data' => $data]);
     }
 
     /**
@@ -23,7 +29,9 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
+        $title = "Nuevo Registro";
+        $action = "new";
+        return view($this->folder.'save',['title' => $title, 'action' => $action]);
     }
 
     /**
@@ -34,7 +42,34 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+            'price_unit' => 'required',
+            'price_cost' => 'required'
+        ]);
+
+        $object = new Product();
+        $object->code = $request->input('code');
+        $object->name = $request->input('name');
+        $object->description = $request->input('description');
+        $object->price_unit = $request->input('price_unit');
+        $object->price_cost = $request->input('price_cost');
+
+        if($request->hasFile('avatar')){
+            $object->avatar = $request->avatar->store('products');
+        }else{
+            $object->avatar = NULL;
+        }
+
+        if($object->save()){
+            flash()->overlay('Datos registrados con Exito!!','Exito!!');
+        }else{
+            flash()->overlay('Error al tratar de registrar los Datos!!','Error!!');
+        }
+
+        return redirect()->route($this->base_route);
     }
 
     /**
@@ -56,7 +91,11 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $title = "Actualizar Registro";
+        $action = "update";
+        $data = Product::findorfail($id);
+
+        return view($this->folder.'save',['title' => $title,'action' => $action, 'data' => $data]);
     }
 
     /**
@@ -68,7 +107,33 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+            'price_unit' => 'required',
+            'price_cost' => 'required'
+        ]);
+
+        $object = Product::findorfail($id);
+        $object->code = $request->input('code');
+        $object->name = $request->input('name');
+        $object->description = $request->input('description');
+        $object->price_unit = $request->input('price_unit');
+        $object->price_cost = $request->input('price_cost');
+
+        if($request->haveFile('avatar')){
+            Storage::delete($object->avatar);
+            $object->avatar = $request->avatar->store('products');
+        }
+
+        if($object->update()){
+            flash()->overlay('Datos actualizados con Exito!!','Exito!!');
+        }else{
+            flash()->overlay('Error al tratar de actualizar los Datos!!','Error!!');
+        }
+
+        return redirect()->route($this->base_route);
     }
 
     /**
@@ -79,6 +144,14 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $object = Product::findorfail($id);
+        $image = $object->avatar;
+        if($object->delete()){
+            Storage::delete($image);
+            flash()->overlay('Registro Eliminado con Exito!!','Exito!!');
+        }else{
+            flash()->overlay('Error al tratar de Eliminar el Registro!!','Error!!');
+        }
+        return redirect()->route($this->base_route);
     }
 }

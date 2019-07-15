@@ -56,19 +56,3 @@
         </div>
     </div>
 @stop
-@section('js')
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#generate_code").click(function(){
-           var result           = '';
-           var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-           var charactersLength = characters.length;
-           var length = 8;
-           for ( var i = 0; i < length; i++ ) {
-              result += characters.charAt(Math.floor(Math.random() * charactersLength));
-           }
-           $("#seller_code").val(result);
-       });
-    });
-</script>
-@stop
