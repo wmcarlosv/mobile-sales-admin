@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Customer;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $title = 'Escritorio';
+        $sellers = User::where('role','=','seller')->get();
+        $customers = Customer::all();
+        return view('home',['title' => $title, 'sellers' => $sellers, 'customers' => $customers]);
     }
 }

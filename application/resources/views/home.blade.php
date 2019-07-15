@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'AdminLTE')
+@section('title', $title)
 
 @section('content_header')
-    <h1>Escritorio</h1>
+    <h1>{{ $title }}</h1>
 @stop
 
 @section('content')
@@ -15,7 +15,7 @@
 			  <span class="info-box-icon bg-red"><i class="fa fa-money"></i></span>
 			  <div class="info-box-content">
 			    <span class="info-box-text">Vendedores</span>
-			    <span class="info-box-number">0</span>
+			    <span class="info-box-number">{{ $sellers->count() }}</span>
 			  </div>
 			  <!-- /.info-box-content -->
 			</div>
@@ -28,7 +28,7 @@
 			  <span class="info-box-icon bg-blue"><i class="fa fa-users"></i></span>
 			  <div class="info-box-content">
 			    <span class="info-box-text">Clientes</span>
-			    <span class="info-box-number">0</span>
+			    <span class="info-box-number">{{ $customers->count() }}</span>
 			  </div>
 			  <!-- /.info-box-content -->
 			</div>
@@ -56,7 +56,26 @@
     				<h2>Ultimos Clientes Registrados</h2>
     			</div>
     			<div class="panel-body">
-    				
+    				<table class="table table-bordered table-striped">
+                        <thead>
+                            <th>ID</th>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Telefono</th>
+                        </thead>
+                        <tbody>
+                            @foreach($customers as $c)
+                                <tr>
+                                    <td>{{ $c->id }}</td>
+                                    <td>{{ $c->dni }}</td>
+                                    <td>{{ $c->full_name }}</td>
+                                    <td>{{ $c->email }}</td>
+                                    <td>{{ $c->phone }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>        
+                    </table>
     			</div>
     		</div>
     	</div>
