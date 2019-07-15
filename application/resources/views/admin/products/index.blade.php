@@ -62,7 +62,7 @@
         $('table.data-table').DataTable();
         $('body').on('click','button.delete-record', function(){
 
-            if(!confirm('Estas seguro de activar o desactivar este registro?')){
+            if(!confirm('Estas seguro de eliminar este registro?')){
                 return false;
             }
 
