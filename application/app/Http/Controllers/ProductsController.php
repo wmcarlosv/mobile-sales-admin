@@ -122,7 +122,7 @@ class ProductsController extends Controller
         $object->price_unit = $request->input('price_unit');
         $object->price_cost = $request->input('price_cost');
 
-        if($request->haveFile('avatar')){
+        if($request->hasFile('avatar')){
             Storage::delete($object->avatar);
             $object->avatar = $request->avatar->store('products');
         }
