@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Customer;
+use App\Order;
 
 class HomeController extends Controller
 {
@@ -27,7 +28,8 @@ class HomeController extends Controller
     {
         $title = 'Escritorio';
         $sellers = User::where('role','=','seller')->get();
+        $orders = Order::all();
         $customers = Customer::all();
-        return view('home',['title' => $title, 'sellers' => $sellers, 'customers' => $customers]);
+        return view('home',['title' => $title, 'sellers' => $sellers, 'customers' => $customers, 'orders' => $orders]);
     }
 }

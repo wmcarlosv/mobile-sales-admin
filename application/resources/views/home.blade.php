@@ -41,7 +41,7 @@
 			  <span class="info-box-icon bg-green"><i class="fa fa-list"></i></span>
 			  <div class="info-box-content">
 			    <span class="info-box-text">Ordenes</span>
-			    <span class="info-box-number">0</span>
+			    <span class="info-box-number">{{ $orders->count() }}</span>
 			  </div>
 			  <!-- /.info-box-content -->
 			</div>
@@ -86,7 +86,26 @@
     				<h2>Ultimas Ordenes Realizadas</h2>
     			</div>
     			<div class="panel-body">
-    				
+    				<table class="table table-bordered table-striped">
+                        <thead>
+                            <th>ID</th>
+                            <th>Numero</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                        </thead>
+                        <tbody>
+                            @foreach($orders as $or)
+                                <tr>
+                                    <td>{{ $or->id }}</td>
+                                    <td>{{ $or->order_number }}</td>
+                                    <td>{{ $or->customer->full_name }}</td>
+                                    <td>{{ $or->order_date }}</td>
+                                    <td>{{ $or->total }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>     
+                    </table>
     			</div>
     		</div>
     	</div>
