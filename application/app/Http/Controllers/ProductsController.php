@@ -52,10 +52,10 @@ class ProductsController extends Controller
         ]);
 
         $object = new Product();
-        $object->code = $request->input('code');
-        $object->name = $request->input('name');
-        $object->bar_code = $request->input('bar_code');
-        $object->description = $request->input('description');
+        $object->code = strtoupper($request->input('code'));
+        $object->name = strtoupper($request->input('name'));
+        $object->bar_code = strtoupper($request->input('bar_code'));
+        $object->description = strtoupper($request->input('description'));
         $object->price_unit = $request->input('price_unit');
         $object->price_cost = $request->input('price_cost');
 
@@ -110,19 +110,19 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'code' => 'required|unique:products',
+            'code' => 'required|unique:products,code,'.$id,
             'name' => 'required',
             'description' => 'required',
             'price_unit' => 'required',
             'price_cost' => 'required',
-            'bar_code' => 'required|unique:products'
+            'bar_code' => 'required|unique:products,bar_code,'.$id
         ]);
 
         $object = Product::findorfail($id);
-        $object->code = $request->input('code');
-        $object->name = $request->input('name');
-        $object->bar_code = $request->input('bar_code');
-        $object->description = $request->input('description');
+        $object->code = strtoupper($request->input('code'));
+        $object->name = strtoupper($request->input('name'));
+        $object->bar_code = strtoupper($request->input('bar_code'));
+        $object->description = strtoupper($request->input('description'));
         $object->price_unit = $request->input('price_unit');
         $object->price_cost = $request->input('price_cost');
         if($request->hasFile('avatar')){

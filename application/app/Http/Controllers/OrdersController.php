@@ -47,7 +47,7 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'order_number' => 'required',
+            'order_number' => 'required|unique:orders',
             'order_date' => 'required',
             'customer_id' => 'required',
             'tax' => 'required',
@@ -60,10 +60,10 @@ class OrdersController extends Controller
         DB::beginTransaction();
 
         $object = new Order();
-        $object->order_number = $request->input('order_number');
+        $object->order_number = strtoupper($request->input('order_number'));
         $object->order_date = date('Y-m-d',strtotime($request->input('order_date')));
         $object->customer_id = $request->input('customer_id');
-        $object->note = $request->input('note');
+        $object->note = strtoupper($request->input('note'));
         $object->tax = $request->input('tax');
         $object->discount = $request->input('discount');
         $object->transport = $request->input('transport');
@@ -145,7 +145,7 @@ class OrdersController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'order_number' => 'required',
+            'order_number' => 'required|unique:orders,order_number,'.$id,
             'order_date' => 'required',
             'customer_id' => 'required',
             'tax' => 'required',
@@ -157,10 +157,10 @@ class OrdersController extends Controller
 
         DB::beginTransaction();
         $object = Order::findorfail($id);
-        $object->order_number = $request->input('order_number');
+        $object->order_number = strtoupper($request->input('order_number'));
         $object->order_date = date('Y-m-d',strtotime($request->input('order_date')));
         $object->customer_id = $request->input('customer_id');
-        $object->note = $request->input('note');
+        $object->note = strtoupper($request->input('note'));
         $object->tax = $request->input('tax');
         $object->discount = $request->input('discount');
         $object->transport = $request->input('transport');

@@ -49,10 +49,10 @@ class UsersController extends Controller
         ]);
 
         $object = new User();
-        $object->name = $request->input('name');
-        $object->email = $request->input('email');
+        $object->name = strtoupper($request->input('name'));
+        $object->email = strtoupper($request->input('email'));
         $object->role = 'seller';
-        $object->seller_code = $request->input('seller_code');
+        $object->seller_code = strtoupper($request->input('seller_code'));
         $object->password = bcrypt($request->input('seller_code'));
 
         if($object->save()){
@@ -106,10 +106,10 @@ class UsersController extends Controller
         ]);
 
         $object = User::findorfail($id);
-        $object->name = $request->input('name');
-        $object->email = $request->input('email');
+        $object->name = strtoupper($request->input('name'));
+        $object->email = strtoupper($request->input('email'));
         $object->role = 'seller';
-        $object->seller_code = $request->input('seller_code');
+        $object->seller_code = strtoupper($request->input('seller_code'));
         $object->password = bcrypt($request->input('seller_code'));
 
         if($object->update()){
@@ -153,8 +153,8 @@ class UsersController extends Controller
         ]);
 
         $object = User::findorfail(Auth::user()->id);
-        $object->name = $request->input('name');
-        $object->email = $request->input('email');
+        $object->name = strtoupper($request->input('name'));
+        $object->email = strtoupper($request->input('email'));
 
         if($object->save()){
             flash()->overlay('Perfil Actualizado con Exito','Exito!!');

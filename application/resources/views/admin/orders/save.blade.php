@@ -41,7 +41,11 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="order_date">Fecha de Orden: </label>
-                            <input type="date" name="order_date" id="order_date" class="form-control" value="{{ @$data->order_date }}" />
+                            @if($action == 'new')
+                                <input type="date" name="order_date" id="order_date" class="form-control" value="{{ date('Y-m-d') }}" />
+                            @else
+                                <input type="date" name="order_date" id="order_date" class="form-control" value="{{ @$data->order_date }}" />
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -126,23 +130,23 @@
                         <tbody>
                             <tr>
                                 <td width="70%" align="right"><b>Sub Total:</b></td>
-                                <td width="30%"><input type="text" readonly="readonly" name="subtotal" id="subtotal" class="form-control" value="{{ @$data->subtotal }}" /></td>
+                                <td width="30%"><input type="text" readonly="readonly" name="subtotal" id="subtotal" class="form-control" value="{{ @$data->subtotal|0 }}" /></td>
                             </tr>
                             <tr>
                                 <td width="70%" align="right"><b>Impuesto:</b></td>
-                                <td width="30%"><input type="text" name="tax" id="tax" class="form-control" value="{{ @$data->tax }}" /></td>
+                                <td width="30%"><input type="text" name="tax" id="tax" class="form-control" value="{{ @$data->tax|0 }}" /></td>
                             </tr>
                             <tr>
                                 <td width="70%" align="right"><b>Descuento:</b></td>
-                                <td width="30%"><input type="text" name="discount" id="discount" class="form-control" value="{{ @$data->discount }}" /></td>
+                                <td width="30%"><input type="text" name="discount" id="discount" class="form-control" value="{{ @$data->discount|0 }}" /></td>
                             </tr>
                             <tr>
                                 <td width="70%" align="right"><b>Transporte:</b></td>
-                                <td width="30%"><input type="text" name="transport" id="transport" class="form-control" value="{{ @$data->transport }}" /></td>
+                                <td width="30%"><input type="text" name="transport" id="transport" class="form-control" value="{{ @$data->transport|0 }}" /></td>
                             </tr>
                             <tr>
                                 <td width="70%" align="right"><b>Total:</b></td>
-                                <td width="30%"><input type="text" readonly="readonly" name="total" id="total" class="form-control" value="{{ @$data->total }}" /></td>
+                                <td width="30%"><input type="text" readonly="readonly" name="total" id="total" class="form-control" value="{{ @$data->total|0 }}" /></td>
                             </tr>
                         </tbody>
                     </table>
@@ -244,19 +248,20 @@
         var discount = 0;
         var grand_total = 0;
 
-        if(impuesto){
-            tax = (subtotal * impuesto) / 100;
-        }
-
         if(descuento){
             discount = (subtotal * descuento) / 100;
+            subtotal = (subtotal - discount);
+        }
+
+        if(impuesto){
+            tax = (subtotal * impuesto) / 100;
         }
 
         if(!transporte){
             transporte = 0;
         }
 
-        grand_total = ((subtotal+tax+transporte) - discount);
+        grand_total = (subtotal+tax+transporte);
         $("#total").val(grand_total);
     }
 </script>

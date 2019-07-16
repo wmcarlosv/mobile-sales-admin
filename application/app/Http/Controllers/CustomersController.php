@@ -42,7 +42,7 @@ class CustomersController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'dni' => 'required',
+            'dni' => 'required|unique:customers',
             'full_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
@@ -52,12 +52,12 @@ class CustomersController extends Controller
 
         $object = new Customer();
         $object->dni = $request->input('dni');
-        $object->full_name = $request->input('full_name');
-        $object->email = $request->input('email');
+        $object->full_name = strtoupper($request->input('full_name'));
+        $object->email = strtoupper($request->input('email'));
         $object->phone = $request->input('phone');
-        $object->city = $request->input('city');
-        $object->address = $request->input('address');
-        $object->note = $request->input('note');
+        $object->city = strtoupper($request->input('city'));
+        $object->address = strtoupper($request->input('address'));
+        $object->note = strtoupper($request->input('note'));
 
         if($object->save()){
             flash()->overlay('Datos registrados con Exito!!','Exito!!');
@@ -104,7 +104,7 @@ class CustomersController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'dni' => 'required',
+            'dni' => 'required|unique:customers,dni,'.$id,
             'full_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
@@ -114,12 +114,12 @@ class CustomersController extends Controller
 
         $object = Customer::findorfail($id);
         $object->dni = $request->input('dni');
-        $object->full_name = $request->input('full_name');
-        $object->email = $request->input('email');
+        $object->full_name = strtoupper($request->input('full_name'));
+        $object->email = strtoupper($request->input('email'));
         $object->phone = $request->input('phone');
-        $object->city = $request->input('city');
-        $object->address = $request->input('address');
-        $object->note = $request->input('note');
+        $object->city = strtoupper($request->input('city'));
+        $object->address = strtoupper($request->input('address'));
+        $object->note = strtoupper($request->input('note'));
 
         if($object->update()){
             flash()->overlay('Datos actualizados con Exito!!','Exito!!');
