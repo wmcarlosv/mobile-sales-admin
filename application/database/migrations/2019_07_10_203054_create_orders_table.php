@@ -15,7 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('order_numer',10)->nullable(false);
+            $table->string('order_number',10)->nullable(false);
             $table->date('order_date')->nullable(false);
             $table->bigInteger('customer_id')->unsigned();
             $table->string('sellder_code',4)->nullable();
@@ -23,6 +23,7 @@ class CreateOrdersTable extends Migration
             $table->float('tax')->nullable()->default(0.0);
             $table->float('discount')->nullable()->default(0.0);
             $table->float('transport')->nullable()->default(0.0);
+            $table->float('subtotal')->nullable()->default(0.0);
             $table->float('total')->nullable()->default(0.0);
             $table->timestamps();
 

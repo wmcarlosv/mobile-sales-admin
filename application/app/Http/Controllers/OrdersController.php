@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Order;
+use App\Customer;
+use App\Product;
+use DB;
 
 class OrdersController extends Controller
 {
@@ -30,7 +33,9 @@ class OrdersController extends Controller
     {
         $title = "Nuevo Registro";
         $action = "new";
-        return view($this->folder.'save',['title' => $title, 'action' => $action]);
+        $customers = Customer::all();
+        $products = Product::all();
+        return view($this->folder.'save',['title' => $title, 'action' => $action, 'customers' => $customers, 'products' => $products]);
     }
 
     /**
@@ -48,16 +53,55 @@ class OrdersController extends Controller
             'tax' => 'required',
             'discount' => 'required',
             'transport' => 'required',
+            'subtotal' => 'required',
             'total' => 'required'
         ]);
 
+        DB::beginTransaction();
+
         $object = new Order();
         $object->order_number = $request->input('order_number');
+        $object->order_date = date('Y-m-d',strtotime($request->input('order_date')));
+        $object->customer_id = $request->input('customer_id');
+        $object->note = $request->input('note');
+        $object->tax = $request->input('tax');
+        $object->discount = $request->input('discount');
+        $object->transport = $request->input('transport');
+        $object->subtotal = $request->input('subtotal');
+        $object->total = $request->input('total');
+
+        //detalle
+        $product = $request->input('product');
+        $qty = $request->input('qty');
+        $price_unit = $request->input('price_unit');
+        $total_line = $request->input('total_line');
+
+        $cont_error = 0;
 
         if($object->save()){
-            flash()->overlay('Datos registrados con Exito!!','Exito!!');
+            for($i=0; $i < count($product); $i++){
+                if( $object->products()->attach([
+                        $product[$i] => [
+                            'qty' => $qty[$i],
+                            'price_unit' => $price_unit[$i],
+                            'total_line' => $total_line[$i]
+                        ]
+                    ]))
+                {
+                    $cont_error++;
+                }
+            }
+            
         }else{
+            $cont_error++;  
+        }
+
+        if($cont_error > 0){
+            DB::rollBack();
             flash()->overlay('Error al tratar de registrar los Datos!!','Error!!');
+        }else{
+            DB::commit();
+            flash()->overlay('Datos registrados con Exito!!','Exito!!');
         }
 
         return redirect()->route($this->base_route);
@@ -84,9 +128,11 @@ class OrdersController extends Controller
     {
         $title = "Actualizar Registro";
         $action = "update";
+        $customers = Customer::all();
+        $products = Product::all();
         $data = Order::findorfail($id);
 
-        return view($this->folder.'save',['title' => $title,'action' => $action, 'data' => $data]);
+        return view($this->folder.'save',['title' => $title,'action' => $action, 'data' => $data, 'customers' => $customers, 'products' => $products]);
     }
 
     /**
@@ -105,16 +151,55 @@ class OrdersController extends Controller
             'tax' => 'required',
             'discount' => 'required',
             'transport' => 'required',
+            'subtotal' => 'required',
             'total' => 'required'
         ]);
 
+        DB::beginTransaction();
         $object = Order::findorfail($id);
         $object->order_number = $request->input('order_number');
+        $object->order_date = date('Y-m-d',strtotime($request->input('order_date')));
+        $object->customer_id = $request->input('customer_id');
+        $object->note = $request->input('note');
+        $object->tax = $request->input('tax');
+        $object->discount = $request->input('discount');
+        $object->transport = $request->input('transport');
+        $object->subtotal = $request->input('subtotal');
+        $object->total = $request->input('total');
 
-        if($object->update()){
-            flash()->overlay('Datos actualizados con Exito!!','Exito!!');
+        //detalle
+        $product = $request->input('product');
+        $qty = $request->input('qty');
+        $price_unit = $request->input('price_unit');
+        $total_line = $request->input('total_line');
+
+        $cont_error = 0;
+
+        if($object->save()){
+            $object->products()->detach();
+            for($i=0; $i < count($product); $i++){
+                if( $object->products()->attach([
+                        $product[$i] => [
+                            'qty' => $qty[$i],
+                            'price_unit' => $price_unit[$i],
+                            'total_line' => $total_line[$i]
+                        ]
+                    ]))
+                {
+                    $cont_error++;
+                }
+            }
+            
         }else{
-            flash()->overlay('Error al tratar de actualizar los Datos!!','Error!!');
+            $cont_error++;  
+        }
+
+        if($cont_error > 0){
+            DB::rollBack();
+            flash()->overlay('Error al tratar de modificar los Datos!!','Error!!');
+        }else{
+            DB::commit();
+            flash()->overlay('Datos modificados con Exito!!','Exito!!');
         }
 
         return redirect()->route($this->base_route);

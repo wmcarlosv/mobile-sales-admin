@@ -28,7 +28,7 @@
                                 <td>{{ $d->id }}</td>
                                 <td>{{ $d->order_number }}</td>
                                 <td>{{ date('d-m-Y',strtotime($d->order_date)) }}</td>
-                                <td>{{ $d->customer->name }}</td>
+                                <td>{{ $d->customer->full_name }}</td>
                                 <td>{{ $d->total }}</td>
                                 <td>
                                     <a href="{{ route('orders.edit',$d->id) }}" class="btn btn-info"><i class="fa fa-pencil"></i></a>
