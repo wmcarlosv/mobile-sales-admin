@@ -2,6 +2,14 @@
 
 @section('title', $title)
 
+@section('css')
+<style type="text/css">
+    input, select, textarea{
+        text-transform: uppercase !important;
+    }
+</style>
+@stop
+
 @section('content')
     @if($errors->any())
         <div class="alert alert-danger">

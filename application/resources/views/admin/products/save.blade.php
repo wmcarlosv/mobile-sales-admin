@@ -2,6 +2,14 @@
 
 @section('title', $title)
 
+@section('css')
+<style type="text/css">
+    input, select, textarea{
+        text-transform: uppercase !important;
+    }
+</style>
+@stop
+
 @section('content')
     @if($errors->any())
         <div class="alert alert-danger">
@@ -31,6 +39,10 @@
                     <input type="text" name="name" id="name" class="form-control" value="{{ @$data->name }}" />
                 </div>
                 <div class="form-group">
+                    <label for="bar_code">Codigo de Barras: </label>
+                    <input type="text" name="bar_code" id="bar_code" class="form-control" value="{{ @$data->bar_code }}" />
+                </div>
+                <div class="form-group">
                     <label for="description">Descripción: </label>
                     <textarea name="description" id="description" class="form-control"> {{ @$data->description }}</textarea>
                 </div>
@@ -46,7 +58,7 @@
                     <label for="avatar">Avatar: </label>
                     @if($action == 'update')
                         @if(!empty(@$data->avatar))
-                            <img class="img-thumbnail" width="150" height="150" src="{{ asset('application/storage/app/'.@$data->avatar) }}">
+                            <img class="img-thumbnail" width="300" height="300" src="{{ asset('application/storage/app/'.@$data->avatar) }}">
                         @endif
                     @endif
                     <input type="file" name="avatar" id="avatar" class="form-control" />

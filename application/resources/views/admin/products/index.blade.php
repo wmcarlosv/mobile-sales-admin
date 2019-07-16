@@ -35,7 +35,7 @@
                                 <td>{{ $d->price_cost }}</td>
                                 <td>
                                     @if(!empty($d->avatar))
-                                        <img class="img-thumbnail" width="150" height="150" src="{{ asset('application/storage/app/'.$d->avatar) }}">
+                                        <img class="img-thumbnail" width="50" height="50" src="{{ asset('application/storage/app/'.$d->avatar) }}">
                                     @else
                                         <label class="label label-info">Sin Imagen</label>
                                     @endif

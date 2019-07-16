@@ -43,16 +43,18 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required',
+            'code' => 'required|unique:products',
             'name' => 'required',
             'description' => 'required',
             'price_unit' => 'required',
-            'price_cost' => 'required'
+            'price_cost' => 'required',
+            'bar_code' => 'required|unique:products'
         ]);
 
         $object = new Product();
         $object->code = $request->input('code');
         $object->name = $request->input('name');
+        $object->bar_code = $request->input('bar_code');
         $object->description = $request->input('description');
         $object->price_unit = $request->input('price_unit');
         $object->price_cost = $request->input('price_cost');
@@ -108,16 +110,18 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'code' => 'required',
+            'code' => 'required|unique:products',
             'name' => 'required',
             'description' => 'required',
             'price_unit' => 'required',
-            'price_cost' => 'required'
+            'price_cost' => 'required',
+            'bar_code' => 'required|unique:products'
         ]);
 
         $object = Product::findorfail($id);
         $object->code = $request->input('code');
         $object->name = $request->input('name');
+        $object->bar_code = $request->input('bar_code');
         $object->description = $request->input('description');
         $object->price_unit = $request->input('price_unit');
         $object->price_cost = $request->input('price_cost');
