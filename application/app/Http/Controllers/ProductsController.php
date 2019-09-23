@@ -157,4 +157,11 @@ class ProductsController extends Controller
         }
         return redirect()->route($this->base_route);
     }
+
+    public function api_get_products(){
+        $products = Product::all();
+        return response()
+            ->json($products)
+            ->header('Access-Control-Allow-Origin','*');
+    }
 }
